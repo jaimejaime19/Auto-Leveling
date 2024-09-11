@@ -37,6 +37,17 @@ public class AutoLevelingCommands {
                             .executes(AutoLevelingCommands::executeGetLevelCommand)))
             .requires(AutoLevelingCommands::hasPermission);
     event.getDispatcher().register(getGlobalLevelCommand);
+    LiteralArgumentBuilder<CommandSourceStack> setGlobalLevelCommand =
+        Commands.literal("autoleveling")
+            .then(
+                Commands.literal("level")
+                    .then(
+                        Commands.literal("set")
+                            .then(
+                                Commands.argument("value", IntegerArgumentType.integer())
+                                    .executes(AutoLevelingCommands::executeSetLevelCommand))))
+            .requires(AutoLevelingCommands::hasPermission);
+    event.getDispatcher().register(setGlobalLevelCommand);
   }
 
   private static int executeAddLevelCommand(CommandContext<CommandSourceStack> ctx) {
@@ -53,6 +64,14 @@ public class AutoLevelingCommands {
     GlobalLevelingData globalLevelingData = GlobalLevelingData.get(server);
     int levelBonus = globalLevelingData.getLevelBonus();
     ctx.getSource().sendSystemMessage(Component.literal("Global level bonus is " + levelBonus));
+    return 1;
+  }
+
+  private static int executeSetLevelCommand(CommandContext<CommandSourceStack> ctx) {
+    MinecraftServer server = ctx.getSource().getServer();
+    GlobalLevelingData globalLevelingData = GlobalLevelingData.get(server);
+    Integer newLevel = ctx.getArgument("value", Integer.class);
+    globalLevelingData.setLevel(newLevel);
     return 1;
   }
 
