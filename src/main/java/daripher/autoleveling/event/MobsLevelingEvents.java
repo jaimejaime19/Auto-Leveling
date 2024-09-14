@@ -202,7 +202,7 @@ public class MobsLevelingEvents {
 
   private static Map<Attribute, AttributeModifier> getAttributeBonuses(LivingEntity entity) {
     LevelingSettings settings = getLevelingSettings(entity);
-    if (settings.attributeModifiers().isEmpty()) {
+    if (settings.attributeModifiers() == null || settings.attributeModifiers().isEmpty()) {
       return Config.getAttributeBonuses();
     }
     return settings.attributeModifiers();
